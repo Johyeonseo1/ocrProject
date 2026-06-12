@@ -8,6 +8,7 @@ data class Receipt(
 )
 
 object DataMapper {
+
     fun mapToReceipt(
         merchantName: String,
         date: String,

@@ -53,6 +53,7 @@ class ReceiptPro {
         // 데이터를 필터링 및 정리
         val rawDataList = ReceiptParser.parseRawReceiptDetails(receiptItem)
 
+        // 리스트를 간단하게 수정
         val simpleList = ReceiptParser.simpleList(rawDataList)
 
         // 2. String 타입의 simpleList를 바로 반환합니다.

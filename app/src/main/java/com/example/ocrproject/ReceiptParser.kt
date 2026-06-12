@@ -57,8 +57,6 @@ object ReceiptParser {
             if (line.contains(":") || line.contains("[") || line.contains("]")) {
                 null
             } else {
-                // 💡 숫자 사이에 낀 [쉼표 + 공백]을 찾아서 흔적도 없이 지웁니다.
-                // "1,500" -> "1500" / "1, 500" -> "1500" 둘 다 완벽하게 잡아냅니다.
                 line.replace(Regex("(?<=\\d),\\s*(?=\\d)"), "")
             }
         }.joinToString("\n") // 다시 하나의 이쁜 String으로 합쳐서 반환
@@ -184,23 +182,6 @@ object ReceiptParser {
         val firstTopLine = lineList.map { it.trim() }.firstOrNull { it.isNotEmpty() }
         return firstTopLine ?: "알 수 없는 가게"
     }
-
-    /**
-    fun cleanStoreNameBrackets(rawStoreName: String): String {
-        if (rawStoreName == "알 수 없는 가게") return rawStoreName
-
-        // 괄호와 괄호 안의 문자열을 통째로 매칭하는 정규식
-        val bracketRegex = Regex("\\[.*?\\]|\\(.*?\\)")
-
-        // 1. 괄호와 안의 내용물 제거
-        var cleanedName = rawStoreName.replace(bracketRegex, "")
-
-        // 2. 남은 잡다한 기호(:, -, 대괄호 등) 및 공백 정리
-        cleanedName = cleanedName.replace(Regex("[:\\s\\-\\[\\](),.]+"), " ").trim()
-
-        return if (cleanedName.isNotEmpty()) cleanedName else "알 수 없는 가게"
-    }
-    **/
 
     fun cleanStoreNameBrackets(rawStoreName: String): String {
         if (rawStoreName == "알 수 없는 가게") return rawStoreName

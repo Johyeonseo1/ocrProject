@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             receiptProcess.processNewReceipt(testUri) { receiptResult ->
                 // OCR 작업은 백그라운드에서 돌기 때문에 UI 변경은 반드시 runOnUiThread 안에서!
                 runOnUiThread {
-
                     val displayLayout = buildString {
                         appendLine("가맹점 : ${receiptResult.merchantName}")
                         appendLine("결제일 : ${receiptResult.date}")
