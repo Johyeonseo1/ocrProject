@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 @Entity(tableName = "ImgInfo")
-@TypeConverters(ReceiptConverters::class) // 💡 Room이 리스트를 인식할 수 있도록 컨버터를 장착합니다.
+@TypeConverters(ReceiptConverters::class)
 data class ImgFile(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val imgUri: String,                  // 영수증 이미지 경로 (기존 필드가 있다면 그대로 유지)
@@ -18,9 +18,6 @@ data class ImgFile(
     val items: List<com.example.ocrproject.ReceiptItem> // 상품 리스트
 )
 
-/**
- * 💡 List<ReceiptItem>을 데이터베이스가 이해할 수 있는 String(JSON)으로 변환해주는 도우미 클래스
- */
 class ReceiptConverters {
     @TypeConverter
     fun fromReceiptItemList(value: List<com.example.ocrproject.ReceiptItem>): String {

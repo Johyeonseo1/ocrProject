@@ -42,8 +42,9 @@ class ReceiptProcess(
     }
 }
 
-class ReceiptPro{
-    fun executeDataMapping(filteredText: String): List<ReceiptItem> {
+class ReceiptPro {
+    // 1. 반환 타입을 String으로 변경합니다.
+    fun executeDataMapping(filteredText: String): String {
 
         val listText = ReceiptParser.cleanReceiptText(filteredText)
 
@@ -52,11 +53,10 @@ class ReceiptPro{
         // 데이터를 필터링 및 정리
         val rawDataList = ReceiptParser.parseRawReceiptDetails(receiptItem)
 
-        // ReceiptItem 데이터 클래스에 저장
-        val finalReceiptList = DataMapper.mapToFinalReceiptItems(rawDataList)
+        val simpleList = ReceiptParser.simpleList(rawDataList)
 
-        //결과 반환
-        return finalReceiptList
+        // 2. String 타입의 simpleList를 바로 반환합니다.
+        return simpleList
     }
 }
 

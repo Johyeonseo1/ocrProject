@@ -46,27 +46,18 @@ class MainActivity : AppCompatActivity() {
             receiptProcess.processNewReceipt(testUri) { receiptResult ->
                 // OCR 작업은 백그라운드에서 돌기 때문에 UI 변경은 반드시 runOnUiThread 안에서!
                 runOnUiThread {
+
                     val displayLayout = buildString {
                         appendLine("가맹점 : ${receiptResult.merchantName}")
                         appendLine("결제일 : ${receiptResult.date}")
                         appendLine("----------------------------------")
-
-                        if (receiptResult.items.isEmpty()) {
-                            appendLine("   추출된 상품 내역이 없습니다.")
-                        } else {
-                            // 상품 리스트 출력
-                            receiptResult.items.forEach { item ->
-                                appendLine("• ${item.name} | ${item.quantity}개 | ${item.price}원")
-                            }
-                        }
-
+                        appendLine("품 목 : ${receiptResult.items}")
                         appendLine("----------------------------------")
-                        // 세 자리마다 쉼표(,) 찍어서 금액 표현
                         val formattedAmount = String.format("%,d", receiptResult.totalAmount)
                         appendLine("총 결제 금액 : ${formattedAmount}원")
                     }
 
-                    // 💡 빨간 줄이 떴던 binding 대신 미리 찾아둔 resultTextView를 직접 사용합니다!
+                    // 3. 텍스트뷰에 반영
                     resultTextView.text = displayLayout.trimEnd()
                 }
             }

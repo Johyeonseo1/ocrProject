@@ -185,6 +185,7 @@ object ReceiptParser {
         return firstTopLine ?: "알 수 없는 가게"
     }
 
+    /**
     fun cleanStoreNameBrackets(rawStoreName: String): String {
         if (rawStoreName == "알 수 없는 가게") return rawStoreName
 
@@ -196,6 +197,37 @@ object ReceiptParser {
 
         // 2. 남은 잡다한 기호(:, -, 대괄호 등) 및 공백 정리
         cleanedName = cleanedName.replace(Regex("[:\\s\\-\\[\\](),.]+"), " ").trim()
+
+        return if (cleanedName.isNotEmpty()) cleanedName else "알 수 없는 가게"
+    }
+    **/
+
+    fun cleanStoreNameBrackets(rawStoreName: String): String {
+        if (rawStoreName == "알 수 없는 가게") return rawStoreName
+
+        // 괄호와 괄호 안의 문자열을 통째로 매칭하는 정규식
+        val bracketRegex = Regex("\\[.*?\\]|\\(.*?\\)")
+
+        // 1. 괄호와 안의 내용물 제거
+        var cleanedName = rawStoreName.replace(bracketRegex, "")
+
+        // 2. 남은 잡다한 기호(:, -, 대괄호 등) 및 공백 정리
+        cleanedName = cleanedName.replace(Regex("[:\\s\\-\\[\\](),.]+"), " ").trim()
+
+        // 3. 영어 가맹점명을 한글로 변환해주는 매칭 리스트 (대문자 기준 등록)
+        val englishToKoreanStoreMap = mapOf(
+            "BURGER KING" to "버거킹",
+            "LOTTERIA" to "롯데리아",
+            "STARBUCKS" to "스타벅스"
+        )
+
+        // 사용자가 대소문자를 섞어 쓰더라도 매칭되도록 대문자로 변환 후 비교
+        val upperCleanedName = cleanedName.uppercase()
+
+        // 4. 변환 리스트에 존재하는 영어 이름이면 한글로 교체
+        if (englishToKoreanStoreMap.containsKey(upperCleanedName)) {
+            cleanedName = englishToKoreanStoreMap[upperCleanedName] ?: cleanedName
+        }
 
         return if (cleanedName.isNotEmpty()) cleanedName else "알 수 없는 가게"
     }
@@ -325,5 +357,18 @@ object ReceiptParser {
 
         // 두 조건에 모두 해당하지 않으면 원본에서 양끝 공백만 제거하고 반환
         return rawDateTime.trim()
+    }
+
+    fun simpleList(rawDataList: List<Triple<String, Int, Int>>): String {
+        if (rawDataList.isEmpty()) return ""
+
+        val firstItemName = rawDataList.first().first
+        val remainingCount = rawDataList.size - 1
+
+        return if (remainingCount > 0) {
+            "$firstItemName 외 $remainingCount"
+        } else {
+            firstItemName
+        }
     }
 }
